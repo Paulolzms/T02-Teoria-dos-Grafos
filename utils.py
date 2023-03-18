@@ -26,6 +26,22 @@ def read_file(file_name: str):
         else:
             g1.add_directed_edge(num_discipline, i, 0)
             g1.add_directed_edge(i, num_discipline + 1, 1)
+    critical_path(g1, num_discipline, df)
 
 
-        
+def critical_path(g1: WeightedGraph, num_discipline: int, df):
+    dist, pred = g1.dijkstra(num_discipline)
+    time = 0
+    max_dist = -1
+    max_node = -1
+    for i in range(len(dist)):
+        if dist[i] > max_dist:
+            max_dist = dist[i]
+            max_node = i
+    
+    max_node = pred[max_node]
+    while max_node != num_discipline:
+        print(df['Nome'][max_node])
+        max_node = pred[max_node]
+        time += 1
+    print(time)
