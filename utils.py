@@ -1,4 +1,4 @@
-from weightedGrapgh import WeightedGraph
+from weightedGraph import WeightedGraph
 import pandas as pd
 
 def read_file(file_name: str):
@@ -7,7 +7,7 @@ def read_file(file_name: str):
     num_discipline = df.shape[0]
     dependences = ""
 
-    g1 = WeightedGraph(num_discipline + 2)
+    g1 = WeightedGraph(num_discipline + 2, 0, [])
     for i in range(num_discipline):
         if df['Dependências'][i] != '-':
             dependences = df['Dependências'][i]
@@ -32,6 +32,7 @@ def read_file(file_name: str):
 def critical_path(g1: WeightedGraph, num_discipline: int, df):
     dist, pred = g1.dijkstra(num_discipline)
     time = 0
+    critical_path = []
     max_dist = -1
     max_node = -1
     for i in range(len(dist)):
@@ -40,8 +41,11 @@ def critical_path(g1: WeightedGraph, num_discipline: int, df):
             max_node = i
     
     max_node = pred[max_node]
+    print("Caminho Crítico:")
     while max_node != num_discipline:
-        print(df['Nome'][max_node])
+        critical_path.append(df['Nome'][max_node])
         max_node = pred[max_node]
         time += 1
-    print(time)
+    while critical_path != []:
+        print("- " + critical_path.pop())
+    print("\nTempo mínimo:", time)
